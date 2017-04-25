@@ -17,15 +17,12 @@ def convertToCSV (jsonFile):
     
         init = False
         for obj in data:
-            if init:            
-                obj = '{'
-                init = True
-            else:
-                obj = obj.replace(":", ",")
-                obj = obj.replace("\"", "")
-                obj = obj.replace("},", "")
-                obj = obj.replace("}", "")
-                obj = obj.replace("{", "")
+            obj = obj.replace(",", "")
+            obj = obj.replace(": ", ",", 1)
+            obj = obj.replace("\"", "")
+            obj = obj.replace("},", "")
+            obj = obj.replace("}", "")
+            obj = obj.replace("{", "")
             print (obj)
             print (obj, file=f)
     f.close()
