@@ -39,15 +39,16 @@ def convertToJSON(csvFile):
                 if nex == "":
                     nextindent = currentindent[2:]
 
-                if "{" not in current and "}" not in current:    
+                if not current.endswith("{") and not current.endswith("}") and not current.endswith("},"):    
                     current = current.replace(":", ": \"", 1)
-                    current = current + '"'
+                    current = current + "\""
 
-                if "}" not in current: 
-                    current = "\"" + current
-
-                if str(nex) != "" and "{" not in str(current) and "}" not in str(current):    
+                if str(nex) != "" and not current.endswith("{") and not current.endswith("}") and not current.endswith("},"):    
                     current = current + ","
+
+
+                if not current.endswith("}") and not current.endswith("},") and not current.endswith("}, "): 
+                    current = "\"" + current
 
                 current = currentindent + current
                 print (current, file=f)
@@ -62,3 +63,4 @@ def convertToJSON(csvFile):
 
 convertToJSON('dictionary_FR')
 convertToJSON('dictionary_EN')
+print("Conversion from CSV to JSON is Complete.")

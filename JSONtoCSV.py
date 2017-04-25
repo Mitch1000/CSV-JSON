@@ -17,15 +17,28 @@ def convertToCSV (jsonFile):
     
         init = False
         for obj in data:
-            obj = obj.replace(",", "")
-            obj = obj.replace(": ", ",", 1)
-            obj = obj.replace("\"", "")
-            obj = obj.replace("},", "")
-            obj = obj.replace("}", "")
-            obj = obj.replace("{", "")
-            print (obj)
+            obj = obj.replace("\" :", "\":", 1)
+            if obj.endswith(","):
+                obj = "".join(obj.rsplit(",", 1)) 
+
+            if obj.endswith("\""):
+                obj = "".join(obj.rsplit("\"", 1)) 
+
+            if obj.startswith("\""):
+                obj = obj.replace("\"", "", 1) 
+
+            obj = obj.replace("\":", ":", 1)
+
+            obj = obj.replace(": \"", ":", 1)
+
+            obj = obj.replace(":", ",", 1)
+
+            if not any(c.isalpha() for c in obj) or obj.endswith("{"):
+                obj = obj.replace("}", "")
+                obj = obj.replace("{", "")
             print (obj, file=f)
-    f.close()
+        f.close()
 
 convertToCSV('dictionary_FR')
 convertToCSV('dictionary_EN')
+print("Conversion from JSON to CSV is Complete.")
