@@ -5,6 +5,8 @@ def convertToJSON(csvFile):
 
     if os.path.isfile(csvFile + '.csv'):
         
+        print("\n Converted " + csvFile + ".csv from CSV to JSON \n")
+
         if os.path.isfile(csvFile + '.json'):
             os.remove(csvFile + '.json')
     
@@ -13,7 +15,7 @@ def convertToJSON(csvFile):
         with open(csvFile + '.csv') as csv:
             data = csv.readlines()
         
-        data = [x.strip() for x in data] 
+        data = [x.replace('\n', '') for x in data] 
 
         init = False 
         indent = "" 
@@ -22,45 +24,59 @@ def convertToJSON(csvFile):
            if init:
                 currentindent = nextindent 
 
-                if current.endswith(","):
-                   current = current.replace(",", ": {")
-                   nextindent = "  " + currentindent 
+                if current.endswith(', ') and current != '':
+                   current = current.replace(', ', ': {')
+                   nextindent = '  ' + currentindent 
 
-                current = current.replace(",", ":", 1)
+                if current != '':
+                    current = current.replace(',', ':', 1)
 
-                current = current.replace(":", "\":", 1)
+                current = current.replace(':', '":', 1)
 
-                if current == "" and nex != "":
-                    current = "},"
+                if current == '' and nex != '' and nex != None:
+                    current = '},'
 
-                if current == "":
-                    current = "}"
+                if current == '':
+                    current = '}'
 
-                if nex == "":
+                if nex == '':
                     nextindent = currentindent[2:]
 
-                if not current.endswith("{") and not current.endswith("}") and not current.endswith("},"):    
-                    current = current.replace(":", ": \"", 1)
-                    current = current + "\""
+                if (not current.endswith('{') 
+                and not current.endswith('}')
+                and not current.endswith('},') 
+                and not current.endswith('"')):    
+                    current = current.replace(':', ': "', 1)
+                    current = current + '"'
 
-                if str(nex) != "" and not current.endswith("{") and not current.endswith("}") and not current.endswith("},"):    
-                    current = current + ","
+                if current.endswith('}}'):
+                    current = current.replace(':', ': "', 1)
+                    current = current + '"'
 
+                if (str(nex) != '' 
+                and not current.endswith('{') 
+                and not current.endswith('}') 
+                and not current.endswith('},')):    
+                    current = current + ','
 
-                if not current.endswith("}") and not current.endswith("},") and not current.endswith("}, "): 
-                    current = "\"" + current
+                if not current.endswith('}') and not current.endswith('},') and not current.endswith('}, '): 
+                    current = '"' + current
+
+                current = current.replace('\""', '\"')
 
                 current = currentindent + current
                 print (current, file=f)
         
            else:
                 current= '{'
-                nextindent = "  " + indent
+                nextindent = '  ' + indent
                 print (current, file=f)
                 init = True
 
         f.close()
 
-convertToJSON('dictionary_FR')
+    else:
+        print('\n No CSV file titled ' + csvFile + '.csv found. \n')
+
 convertToJSON('dictionary_EN')
-print("Conversion from CSV to JSON is Complete.")
+convertToJSON('dictionary_FR')
