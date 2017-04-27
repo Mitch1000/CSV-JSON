@@ -23,7 +23,7 @@ def convertToJSON(csvFile):
         for previous, current, nex in zip([None]+data[:-1], data, data[1:]+[None]):
            if init:
                 currentindent = nextindent 
-
+                
                 if current.endswith(', ') and current != '' and current != ',':
                    current = current.replace(', ', ': {')
                    nextindent = '  ' + currentindent 
@@ -32,6 +32,7 @@ def convertToJSON(csvFile):
                     current = current.replace(',', ':', 1)
 
                 current = current.replace(':', '":', 1)
+
 
                 if current == '' or current == ',' and nex != '' and nex != ',' and nex != None:
                     current = '},'
